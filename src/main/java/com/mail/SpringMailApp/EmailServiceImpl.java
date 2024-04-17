@@ -3,6 +3,8 @@ package com.mail.SpringMailApp;
 import com.mail.SpringMailApp.Entity.EmailDetails;
 import com.mail.SpringMailApp.Service.EmailService;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,9 +25,26 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
+    // Method to validate email address
+    private boolean isValidEmailAddress(String email){
+        try {
+            InternetAddress internetAddress = new InternetAddress(email);
+            internetAddress.validate();
+            return true;
+        }
+        catch(AddressException e) {
+            return false;
+        }
+    }
+
     // Method 1
     // To send a simple email
     public String sendSimpleMail(EmailDetails details) {
+
+        // Check mail Id
+        if(!isValidEmailAddress(details.getRecipient())){
+            return "Recipient Address is invalid.";
+        }
 
         // Try block to check for exceptions
         try {
@@ -56,6 +75,11 @@ public class EmailServiceImpl implements EmailService {
         // Creating a mime message
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
+
+        // Check mail Id
+        if(!isValidEmailAddress(details.getRecipient())){
+            return "Recipient Address is invalid.";
+        }
 
         try {
             // Setting multipart as true for attachments to be send
