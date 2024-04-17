@@ -23,7 +23,6 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-
     // Method 1
     // To send a simple email
     public String sendSimpleMail(EmailDetails details) {
