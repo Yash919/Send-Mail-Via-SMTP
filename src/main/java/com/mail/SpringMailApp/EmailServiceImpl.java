@@ -46,6 +46,11 @@ public class EmailServiceImpl implements EmailService {
             return "Recipient Address is invalid.";
         }
 
+        // Check subject valid
+        if(!isValidSubject(details.getSubject())){
+            return "Subject is empty or not present";
+        }
+
         // Try block to check for exceptions
         try {
             // Creating a simple mail message
@@ -86,6 +91,11 @@ public class EmailServiceImpl implements EmailService {
             return "Attachment path is not valid.";
         }
 
+        // Check subject valid
+        if(!isValidSubject(details.getSubject())){
+            return "Subject cannot be empty.";
+        }
+
         try {
             // Setting multipart as true for attachments to be send
             mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -118,4 +128,9 @@ public class EmailServiceImpl implements EmailService {
         File file = new File(attachmentPath);
         return file.exists() && file.isFile();
     }
+
+    private boolean isValidSubject(String subject){
+        return subject != null && !subject.trim().isEmpty();
+    }
+
 }
