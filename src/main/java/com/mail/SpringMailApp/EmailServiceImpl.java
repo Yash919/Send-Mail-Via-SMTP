@@ -81,6 +81,11 @@ public class EmailServiceImpl implements EmailService {
             return "Recipient Address is invalid.";
         }
 
+        // Check Attachment Path is Valid
+        if(!isValidAttachmentPath(details.getAttachment())){
+            return "Attachment path is not valid.";
+        }
+
         try {
             // Setting multipart as true for attachments to be send
             mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -106,5 +111,11 @@ public class EmailServiceImpl implements EmailService {
         // Display message when exception occurred
         return "Error while sending mail!!!";
         }
+    }
+
+    // Method to validate attachment path
+    private boolean isValidAttachmentPath(String attachmentPath){
+        File file = new File(attachmentPath);
+        return file.exists() && file.isFile();
     }
 }
