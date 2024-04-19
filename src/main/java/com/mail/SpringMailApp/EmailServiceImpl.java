@@ -47,6 +47,13 @@ public class EmailServiceImpl implements EmailService {
             return "Recipient list is empty.";
         }
 
+        // Check if all recipients are empty strings
+        boolean allEmpty = recipients.stream().allMatch(recipient -> recipient == null || recipient.trim().isEmpty());
+
+        if(allEmpty){
+            return "Recipient list is empty.";
+        }
+
         // Try block to check for exceptions
         try {
 
@@ -106,6 +113,13 @@ public class EmailServiceImpl implements EmailService {
 
         // Check if recipients list is null or empty
         if (recipients == null || recipients.isEmpty()) {
+            return "Recipient list is empty.";
+        }
+
+        // Check if all recipients are empty strings
+        boolean allEmpty = recipients.stream().allMatch(recipient -> recipient == null || recipient.trim().isEmpty());
+
+        if(allEmpty){
             return "Recipient list is empty.";
         }
 
