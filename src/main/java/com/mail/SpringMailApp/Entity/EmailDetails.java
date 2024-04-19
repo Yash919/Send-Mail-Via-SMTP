@@ -1,28 +1,30 @@
 package com.mail.SpringMailApp.Entity;
 
+import java.util.List;
+
 public class EmailDetails {
 
-    private String recipient;
+    private List<String> recipients;
     private String msgBody;
     private String subject;
     private String attachment;
 
-    public EmailDetails(String recipient, String msgBody, String subject, String attachment) {
-        this.recipient = recipient;
+    public EmailDetails() {
+    }
+
+    public EmailDetails(List<String> recipients, String msgBody, String subject, String attachment) {
+        this.recipients = recipients;
         this.msgBody = msgBody;
         this.subject = subject;
         this.attachment = attachment;
     }
 
-    public EmailDetails() {
+    public List<String> getRecipients() {
+        return recipients;
     }
 
-    public String getRecipient() {
-        return recipient;
-    }
-
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setRecipients(List<String> recipients) {
+        this.recipients = recipients;
     }
 
     public String getMsgBody() {
