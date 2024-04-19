@@ -42,12 +42,18 @@ public class EmailServiceImpl implements EmailService {
         // Invalid recipients
         List<String> invalidRecipients = new ArrayList<>();
 
+        // Check if recipients list is null or empty
+        if (recipients == null || recipients.isEmpty()) {
+            return "Recipient list is empty.";
+        }
+
         // Try block to check for exceptions
         try {
 
             for(String recipient : recipients) {
+                // first 2 Condition to check of if it is null or empty.
                 // Check mail Id
-                if (!isValidEmailAddress(recipient)) {
+                if (recipient == null || recipient.isEmpty() || !isValidEmailAddress(recipient)) {
                     invalidRecipients.add(recipient);
                     continue; // Skip sending email to this invalid recipient
                 }
@@ -98,11 +104,17 @@ public class EmailServiceImpl implements EmailService {
         // Variable to keep track of invalid recipients
         List<String> invalidRecipients = new ArrayList<>();
 
+        // Check if recipients list is null or empty
+        if (recipients == null || recipients.isEmpty()) {
+            return "Recipient list is empty.";
+        }
+
         try {
 
             for(String recipient: recipients) {
+                // first 2 Condition to check of if it is null or empty.
                 // Check Mail Id
-                if(!isValidEmailAddress(recipient)){
+                if(recipient == null || recipient.isEmpty() || !isValidEmailAddress(recipient)){
                     invalidRecipients.add(recipient);
                     continue;
                 }
