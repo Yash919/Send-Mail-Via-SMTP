@@ -7,16 +7,16 @@ public class EmailDetails {
     private List<String> recipients;
     private String msgBody;
     private String subject;
-    private String attachment;
+    private List<String> attachments;
 
     public EmailDetails() {
     }
 
-    public EmailDetails(List<String> recipients, String msgBody, String subject, String attachment) {
+    public EmailDetails(List<String> recipients, String msgBody, String subject, List<String> attachments) {
         this.recipients = recipients;
         this.msgBody = msgBody;
         this.subject = subject;
-        this.attachment = attachment;
+        this.attachments = attachments;
     }
 
     public List<String> getRecipients() {
@@ -43,11 +43,11 @@ public class EmailDetails {
         this.subject = subject;
     }
 
-    public String getAttachment() {
-        return attachment;
+    public List<String> getAttachments() {
+        return attachments;
     }
 
-    public void setAttachment(String attachment) {
-        this.attachment = attachment;
+    public void setAttachments(List<String> attachments) {
+        this.attachments = attachments;
     }
 }

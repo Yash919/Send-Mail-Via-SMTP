@@ -95,11 +95,6 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public String sendMailWithAttachment(EmailDetails details) {
 
-        // Check Attachment Path is Valid
-        if(!isValidAttachmentPath(details.getAttachment())){
-            return "Attachment path is not valid.";
-        }
-
         // Check subject valid
         if(!isValidSubject(details.getSubject())){
             return "Subject cannot be empty.";
@@ -111,6 +106,9 @@ public class EmailServiceImpl implements EmailService {
         // Variable to keep track of invalid recipients
         List<String> invalidRecipients = new ArrayList<>();
 
+        // Variable to keep track of invalid attachments
+        List<String> invalidAttachments = new ArrayList<>();
+
         // Check if recipients list is null or empty
         if (recipients == null || recipients.isEmpty()) {
             return "Recipient list is empty.";
@@ -121,6 +119,18 @@ public class EmailServiceImpl implements EmailService {
 
         if(allEmpty){
             return "Recipient list is empty.";
+        }
+
+        // Filtering Valid Invalid Attachments
+        List<String> validAttachments = new ArrayList<>();
+        if(details.getAttachments() != null){
+            for(String attachmentPath : details.getAttachments()){
+                if(isValidAttachmentPath(attachmentPath)){
+                    validAttachments.add(attachmentPath);
+                } else{
+                    invalidAttachments.add(attachmentPath);
+                }
+            }
         }
 
         try {
@@ -144,37 +154,44 @@ public class EmailServiceImpl implements EmailService {
                 mimeMessageHelper.setText(details.getMsgBody());
                 mimeMessageHelper.setSubject(details.getSubject());
 
-
-                // Adding the attachment
-                FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
-
-                mimeMessageHelper.addAttachment(file.getFilename(), file);
+                for(String attachmentPath : validAttachments){
+                    FileSystemResource file = new FileSystemResource(new File(attachmentPath));
+                    mimeMessageHelper.addAttachment(file.getFilename(),file);
+                }
 
                 // Sending the mail
                 javaMailSender.send(mimeMessage);
             }
+
+            // Prepare status message
+            StringBuilder status = new StringBuilder();
             if (!invalidRecipients.isEmpty()) {
-                return "Mail sent Successfully to valid recipients. Invalid recipients: " + invalidRecipients;
-            } else {
-                return "Mail sent Successfully to all recipients.";
+                status.append("Mail sent Successfully to valid recipients. Invalid recipients: ").append(invalidRecipients).append(". \n");
             }
-    }
-    // Catch block to handle MessagingException
-    catch(MessagingException e) {
-        // Display message when exception occurred
-        return "Error while sending mail!!!";
+            if (!invalidAttachments.isEmpty()) {
+                status.append("Some Attachments were invalid: ").append(invalidAttachments).append(". \n");
+            }
+            else if (invalidRecipients.isEmpty()){
+                status.append("Mail Sent successfully to all recipients.");
+            }
+            return status.toString();
+        }
+        // Catch block to handle MessagingException
+        catch(MessagingException e) {
+            // Display message when exception occurred
+            return "Error while sending mail!!!";
         }
     }
 
     // Method to validate email address
     private boolean isValidEmailAddress(String email) {
-            try {
-                InternetAddress internetAddress = new InternetAddress(email);
-                internetAddress.validate();
-                return true;
-            } catch (AddressException e) {
-                return false;
-            }
+        try {
+            InternetAddress internetAddress = new InternetAddress(email);
+            internetAddress.validate();
+            return true;
+        } catch (AddressException e) {
+            return false;
+        }
     }
 
     // Method to validate attachment path
